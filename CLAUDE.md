@@ -1,0 +1,54 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a Spring Boot 3.5.5 application using Java 21, built with Gradle. The application integrates with MariaDB and Redis databases, and includes comprehensive Testcontainers support for both development and testing.
+
+## Build and Development Commands
+
+### Build and Run
+- `./gradlew build` - Build the entire project
+- `./gradlew bootRun` - Run the application locally
+- `./gradlew clean build` - Clean build from scratch
+
+### Testing
+- `./gradlew test` - Run all tests
+- `./gradlew test --tests "ClassName"` - Run specific test class
+- `./gradlew test --tests "*.methodName"` - Run specific test method
+
+### Docker Compose Integration
+- The project includes `compose.yaml` with MariaDB and Redis services
+- Spring Boot's Docker Compose support automatically starts these services during development
+- Use `TestDemoApplication.java` to run the application with Testcontainers for development
+
+## Architecture
+
+### Core Components
+- **DemoApplication.java** - Main Spring Boot application class
+- **TestcontainersConfiguration.java** - Configures MariaDB and Redis containers for testing
+- **TestDemoApplication.java** - Development runner with embedded Testcontainers
+
+### Database Integration
+- MariaDB as primary database with Testcontainers support
+- Redis for caching/session storage
+- All database connections automatically managed via Spring Boot's ServiceConnection
+
+### Testing Strategy
+- JUnit 5 platform with Spring Boot Test
+- Testcontainers for integration testing with real database instances
+- Tests automatically import TestcontainersConfiguration for consistent test environment
+
+## Key Dependencies
+- Spring Boot Starter Web (REST API development)
+- Spring Boot Starter Data Redis
+- Spring Boot Starter Actuator (monitoring/health checks)
+- Testcontainers (MariaDB, Redis)
+- MariaDB JDBC driver
+
+## Development Notes
+- Java 21 language features available
+- Gradle wrapper included (`./gradlew` on Unix, `gradlew.bat` on Windows)
+- Application properties: `src/main/resources/application.properties`
+- Base package: `com.example.demo`
