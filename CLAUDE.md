@@ -47,6 +47,67 @@ This is a Spring Boot 3.5.5 application using Java 21, built with Gradle. The ap
 - Testcontainers (MariaDB, Redis)
 - MariaDB JDBC driver
 
+## Health Checks
+
+The application includes Spring Boot Actuator for comprehensive health monitoring and status checks.
+
+### Health Check Endpoints
+- **Health**: `GET /actuator/health` - Overall application health status
+- **Info**: `GET /actuator/info` - Application information and metadata
+
+### Health Check Commands
+```bash
+# Basic health check
+curl http://localhost:8080/actuator/health
+
+# Pretty-printed health check (requires jq)
+curl http://localhost:8080/actuator/health | jq
+
+# Access via browser
+http://localhost:8080/actuator/health
+```
+
+### Component Health Status
+The health endpoint provides detailed status for all integrated components:
+
+- **Database (MariaDB)** - Connection status and query validation
+- **Redis** - Connection status and ping response
+- **Disk Space** - Available disk space and threshold monitoring
+- **Application** - Overall Spring Boot application health
+
+### Health Response Format
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": {
+      "status": "UP",
+      "details": { "database": "MariaDB", "validationQuery": "isValid()" }
+    },
+    "redis": {
+      "status": "UP",
+      "details": { "version": "7.x" }
+    },
+    "diskSpace": {
+      "status": "UP",
+      "details": { "total": "xxx", "free": "xxx", "threshold": "xxx" }
+    }
+  }
+}
+```
+
+### Status Meanings
+- **UP** - Component is healthy and operational
+- **DOWN** - Component is not responding or failed
+- **OUT_OF_SERVICE** - Component is temporarily unavailable
+- **UNKNOWN** - Component health cannot be determined
+
+### Integration Notes
+- Health checks automatically validate MariaDB and Redis containers when using Docker Compose
+- Testcontainers setup ensures health validation during testing
+- Configure monitoring tools to poll `/actuator/health` for automated alerting
+- Health details are always shown (configured in `application.properties`)
+
 ## Development Notes
 - Java 21 language features available
 - Gradle wrapper included (`./gradlew` on Unix, `gradlew.bat` on Windows)
